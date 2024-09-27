@@ -1,0 +1,101 @@
+.categoryContainer {
+  position: relative;
+  margin: -20% 30px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5%;
+  place-items: center;
+}
+
+
+@media (min-width: 1200px) {
+  .categoryContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .categoryContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .categoryContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.CategoryCard, .SingleCategory {
+  width: 90%;
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.CategoryCard:hover, .SingleCategory:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.CategoryCard img, .SingleCategory img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px; 
+}
+
+.multi img {
+  width: 100%;
+}
+
+.CategoryCard a, .SingleCategory a {
+  text-decoration: none;
+}
+
+.CategoryCard h2, .SingleCategory h2,
+.CategoryCard p, .SingleCategory p {
+  padding: 0 20px;
+  margin: 0 0 10px;
+}
+
+.CategoryCard h2, .SingleCategory h2 {
+  font-size: 20px;
+  color: #0f1111;
+  margin-bottom: 5px;
+}
+
+.CategoryCard p, .SingleCategory p {
+  font-size: 14px; 
+  font-weight: bold;
+  color: #007185;
+}
+
+.imgContainer {
+  height: auto; 
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  place-items: center;
+  margin-bottom: 10%;
+  gap: 5%;
+  padding: 0 10px;
+}
+
+.name {
+  font-size: 12px;
+  color: #0f1111;
+}
+
+@media (max-width: 768px) {
+  .CategoryCard, .SingleCategory {
+    padding: 15px;
+  }
+
+  .CategoryCard h2, .SingleCategory h2 {
+    font-size: 18px;
+  }
+
+  .CategoryCard p, .SingleCategory p {
+    font-size: 14px; 
+  }
+}
