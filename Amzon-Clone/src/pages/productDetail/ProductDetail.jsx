@@ -27,7 +27,13 @@ const ProductDetail = () => {
   }, [productId]);
 
   return (
-    <LayOut>{isLoading ? <Loader /> : <ProductCard renderDesc={true} flex= {true} product={data} />}</LayOut>
+    <LayOut>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <ProductCard renderDesc={true} flex={true} product={data} />
+      )}
+    </LayOut>
   );
 };
 

@@ -10,7 +10,7 @@ const ProtectedRoute = ({ children, msg, redirect }) => {
     if (!user) {
       navigate('/auth', { state: { msg, redirect } });
     }
-  }, [user, navigate, msg, redirect]);
+  }, []);
 
   
   if (!user) {

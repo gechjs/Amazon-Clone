@@ -1,18 +1,19 @@
 .landing_container {
   background-color: rgb(227, 230, 230);
-  display: flex; /* Ensure proper alignment */
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center align for child elements */
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
 }
 
 .landing {
-  width: 100%; /* Full width within the container */
-  max-width: 1500px; /* Max width to ensure it doesn't get too wide */
-  margin: 0 auto; /* Center the landing section */
+  width: 100%; 
+  max-width: 1500px; 
+  margin: 0 auto;
 }
 
 @media (min-width: 1500px) {
   .landing {
-    width: 80%; /* Maintain 80% width for larger screens */
+    width: 80%; 
+    
   }
 }
