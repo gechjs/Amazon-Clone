@@ -8,7 +8,7 @@ import { type } from "../../utils/action.type.js";
 const ProductCard = ({ product, flex, renderDesc, renderAdd }) => {
   const { image, title, rating, id, price, description } = product;
   const [state, dispatch] = useContext(DataContext);
-  
+  console.log(state)
   const addToCart = () => {
     if (!id) {
       console.log("Product ID is undefined.");

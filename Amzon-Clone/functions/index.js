@@ -31,4 +31,5 @@ app.post("/payment/create", async (req, res) => {
   }
 });
 
+// correct export the function
 exports.api = onRequest(app);
