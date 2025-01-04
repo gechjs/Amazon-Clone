@@ -1,5 +1,10 @@
 import { type } from "./action.type";
 
+export interface BasketItem {
+  id: number;
+  // Add other properties of a basket item here
+}
+
 export const initialState = {
   basket: [],
   user: null,
@@ -64,3 +69,4 @@ export const reducer = (state, action) => {
       return state;
   }
 };
+
