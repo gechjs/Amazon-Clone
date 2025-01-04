@@ -2,6 +2,7 @@ import { type } from "./action.type";
 
 export interface BasketItem {
   id: number;
+  quantity: number;
   // Add other properties of a basket item here
 }
 
@@ -19,12 +20,12 @@ export const reducer = (state, action) => {
       if (!existingItem) {
         return {
           ...state,
-          basket: [...state.basket, { ...action.item, amount: 1 }],
+          basket: [...state.basket, { ...action.item, quantity: 1 }],
         };
       } else {
         const updatedBasket = state.basket.map((item) => {
           if (item.id === action.item.id) {
-            return { ...item, amount: item.amount + 1 };
+            return { ...item, quantity: item.quantity + 1 };
           }
           return item;
         });
@@ -38,10 +39,10 @@ export const reducer = (state, action) => {
       const index = state.basket.findIndex((item) => item.id === action.id);
       let newBasket = [...state.basket];
       if (index >= 0) {
-        if (newBasket[index].amount > 1) {
+        if (newBasket[index].quantity > 1) {
           newBasket[index] = {
             ...newBasket[index],
-            amount: newBasket[index].amount - 1,
+            quantity: newBasket[index].quantity - 1,
           };
         } else {
           newBasket.splice(index, 1);
