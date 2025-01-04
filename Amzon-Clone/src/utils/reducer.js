@@ -3,37 +3,40 @@ import { type } from "./action.type";
 export const initialState = {
   basket: [],
   user: null,
+  totalPrice: 0,
 };
 
 export const reducer = (state, action) => {
   switch (action.type) {
     case type.ADD_TO_BASKET:
-      const updatedBasket = state.basket.reduce((acc, item) => {
-        if (item.id === action.item.id) {
-          acc.push({ ...item, amount: item.amount + 1 });
-        } else {
-          acc.push(item);
-        }
-        return acc;
-      }, []);
-
-      const isExistingItem = state.basket.some(
+      const existingItem = state.basket.find(
         (item) => item.id === action.item.id
       );
-
-      if (!isExistingItem) {
-        updatedBasket.push({ ...action.item, amount: 1 });
+      if (!existingItem) {
+        return {
+          ...state,
+          basket: [...state.basket, { ...action.item, amount: 1 }],
+          totalPrice: state.totalPrice + action.item.price,
+        };
+      } else {
+        const updatedBasket = state.basket.map((item) => {
+          if (item.id === action.item.id) {
+            return { ...item, amount: item.amount + 1 };
+          }
+          return item;
+        });
+        return {
+          ...state,
+          basket: updatedBasket,
+          totalPrice: state.totalPrice + action.item.price,
+        };
       }
-
-      return {
-        ...state,
-        basket: updatedBasket,
-      };
 
     case type.REMOVE_FROM_BASKET:
       const index = state.basket.findIndex((item) => item.id === action.id);
       let newBasket = [...state.basket];
       if (index >= 0) {
+        const itemPrice = newBasket[index].price;
         if (newBasket[index].amount > 1) {
           newBasket[index] = {
             ...newBasket[index],
@@ -42,17 +45,20 @@ export const reducer = (state, action) => {
         } else {
           newBasket.splice(index, 1);
         }
+        return {
+          ...state,
+          basket: newBasket,
+          totalPrice: state.totalPrice - itemPrice,
+        };
       }
 
-      return {
-        ...state,
-        basket: newBasket,
-      };
+      return state;
 
     case type.EMPTY_BASKET:
       return {
         ...state,
         basket: [],
+        totalPrice: 0,
       };
 
     case type.SET_USER:
