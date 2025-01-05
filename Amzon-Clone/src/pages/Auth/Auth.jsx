@@ -19,6 +19,7 @@ const Auth = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
   const [passwordVisible, setPasswordVisible] = useState(false); // Added state for password visibility
+  const [emailValid, setEmailValid] = useState(true); // New state for email validation
   const navStateData = useLocation();
   const navigate = useNavigate();
 
@@ -35,8 +36,10 @@ const Auth = () => {
     }
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
+      setEmailValid(false); // Invalid email address
       return;
     }
+    setEmailValid(true); // Valid email address
     setIsLoading(true); 
     if (e.target.name === "signIn") {
       signInWithEmailAndPassword(auth, email, password)
@@ -119,7 +122,11 @@ const Auth = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
                     id="email"
+                    style={{ borderColor: emailValid ? "initial" : "red" }} // Change border color if invalid
                   />
+                  {!emailValid && (
+                    <small style={{ color: "red" }}>Please enter a valid email address.</small>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="password">Password</label>
