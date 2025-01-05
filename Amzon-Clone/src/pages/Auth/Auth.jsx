@@ -121,6 +121,7 @@ const Auth = () => {
                   onClick={authHandler}
                   className={styles.login_signInButton}
                   type="submit"
+                  disabled={isLoading}
                 >
                   {isLoading ? <ClipLoader size={15} /> : " Sign-In"}
                 </button>
@@ -135,6 +136,7 @@ const Auth = () => {
                 onClick={authHandler}
                 type="submit"
                 className={styles.login_registerButton}
+                disabled={isLoading}
               >
                 {isLoading ? (
                   <ClipLoader size={15} />
