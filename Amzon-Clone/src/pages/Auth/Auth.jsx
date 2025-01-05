@@ -14,17 +14,11 @@ import LayOut from "../../components/LayOut/LayOut";
 
 const Auth = () => {
   const [{ user }, dispatch] = useContext(DataContext);
-  // console.log(user);
-  console.log(user);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [Loading, setLoading] = useState({
-    signUp: false,
-    signIn: false,
-  });
+  const [isLoading, setIsLoading] = useState(false); 
   const navStateData = useLocation();
-
   const navigate = useNavigate();
 
   const authHandler = (e) => {
@@ -33,11 +27,8 @@ const Auth = () => {
       setError("Please enter your email and password.");
       return;
     }
+    setIsLoading(true); 
     if (e.target.name === "signIn") {
-      setLoading({
-        ...Loading,
-        signIn: true,
-      });
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           console.log("User signed in!", userCredential.user);
@@ -45,12 +36,8 @@ const Auth = () => {
             type: type.SET_USER,
             user: userCredential.user,
           });
-          setLoading({
-            ...Loading,
-            signIn: false,
-          });
+          setIsLoading(false);
           setError("");
-
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
@@ -59,18 +46,11 @@ const Auth = () => {
           } else if (error.code === 'auth/wrong-password') {
             setError('Incorrect password.');
           } else {
-            setError('An error occurred. Please try again later.');
+            setError('An error occurred during sign-in. Please try again later.');
           }
-          setLoading({
-            ...Loading,
-            signIn: false,
-          });
+          setIsLoading(false); 
         });
     } else {
-      setLoading({
-        ...Loading,
-        signUp: true,
-      });
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           console.log(userCredential);
@@ -78,20 +58,17 @@ const Auth = () => {
             type: type.SET_USER,
             user: userCredential.user,
           });
-          setLoading({
-            ...Loading,
-            signUp: false,
-          });
+          setIsLoading(false);
           setError("");
-
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
-          setError(error.message); 
-          setLoading({
-            ...Loading,
-            signUp: false,
-          });
+          if (error.code === 'auth/email-already-in-use') {
+            setError('This email is already in use. Please try a different email.');
+          } else {
+            setError('An error occurred during registration. Please try again later.');
+          }
+          setIsLoading(false); 
         });
     }
   };
@@ -103,70 +80,74 @@ const Auth = () => {
           <img src={amazonLogo} alt="" />
         </Link>
         <div className={styles.login_container}>
-          <h1>Sign-in</h1>
-          <small
-            style={{
-              padding: "5px",
-              textAlign: "center",
-              color: "red",
-              fontWeight: "bold",
-            }}
-          >
-            {navStateData?.state?.msg}
-          </small>
-          <form action="">
-            <div>
-              <label htmlFor="email">E-mail</label>
-              <input
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                }}
-                type="email"
-                id="email"
-              />
+          {isLoading ? (
+            <div className={styles.loadingContainer}>
+              <ClipLoader size={50} />
             </div>
-            <div>
-              <label htmlFor="password">Password</label>
-              <input
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
+          ) : (
+            <>
+              <h1>Sign-in</h1>
+              <small
+                style={{
+                  padding: "5px",
+                  textAlign: "center",
+                  color: "red",
+                  fontWeight: "bold",
                 }}
-                type="password"
-                id="password"
-              />
-            </div>
-            <button
-              name="signIn"
-              onClick={authHandler}
-              className={styles.login_signInButton}
-              type="submit"
-            >
-              {Loading.signIn ? <ClipLoader size={15} /> : " Sign-In"}
-            </button>
-          </form>
-          <p>
-            By signing-in you agree to the AMAZON FAKE CLONE Conditions of Use &
-            Sale. Please see our Privacy Notice, our Cookies Notice and our
-            Interest-Based Ads Notice.
-          </p>
-          <button
-            name="signUp"
-            onClick={authHandler}
-            type="submit"
-            className={styles.login_registerButton}
-          >
-            {Loading.signUp ? (
-              <ClipLoader size={15} />
-            ) : (
-              "Create your Amazon Account"
-            )}
-          </button>
-          <small style={{ color: "red", paddingTop: "10px" }}>
-            {error ? error : ""} 
-          </small>
-          <Link to="/forgot-password">Forgot your password?</Link> 
+              >
+                {navStateData?.state?.msg}
+              </small>
+              <form action="">
+                <div>
+                  <label htmlFor="email">E-mail</label>
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    id="email"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password">Password</label>
+                  <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    type="password"
+                    id="password"
+                  />
+                </div>
+                <button
+                  name="signIn"
+                  onClick={authHandler}
+                  className={styles.login_signInButton}
+                  type="submit"
+                >
+                  {isLoading ? <ClipLoader size={15} /> : " Sign-In"}
+                </button>
+              </form>
+              <p>
+                By signing-in you agree to the AMAZON FAKE CLONE Conditions of Use &
+                Sale. Please see our Privacy Notice, our Cookies Notice and our
+                Interest-Based Ads Notice.
+              </p>
+              <button
+                name="signUp"
+                onClick={authHandler}
+                type="submit"
+                className={styles.login_registerButton}
+              >
+                {isLoading ? (
+                  <ClipLoader size={15} />
+                ) : (
+                  "Create your Amazon Account"
+                )}
+              </button>
+              <small style={{ color: "red", paddingTop: "10px" }}>
+                {error ? error : ""}
+              </small>
+              <Link to="/forgot-password">Forgot your password?</Link>
+            </>
+          )}
         </div>
       </section>
     </LayOut>
