@@ -38,6 +38,8 @@ const Auth = () => {
           });
           setIsLoading(false);
           setError("");
+          setEmail(""); // Clear email
+          setPassword(""); // Clear password
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
@@ -60,6 +62,8 @@ const Auth = () => {
           });
           setIsLoading(false);
           setError("");
+          setEmail(""); // Clear email
+          setPassword(""); // Clear password
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
