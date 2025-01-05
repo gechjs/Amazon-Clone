@@ -29,6 +29,10 @@ const Auth = () => {
 
   const authHandler = (e) => {
     e.preventDefault();
+    if (email.trim() === "" || password.trim() === "") {
+      setError("Please enter your email and password.");
+      return;
+    }
     if (e.target.name === "signIn") {
       setLoading({
         ...Loading,
@@ -50,7 +54,13 @@ const Auth = () => {
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
-          setError(error);
+          if (error.code === 'auth/user-not-found') {
+            setError('User not found. Please check your email address.');
+          } else if (error.code === 'auth/wrong-password') {
+            setError('Incorrect password.');
+          } else {
+            setError('An error occurred. Please try again later.');
+          }
           setLoading({
             ...Loading,
             signIn: false,
@@ -77,7 +87,7 @@ const Auth = () => {
           navigate(navStateData?.state?.redirect || "/");
         })
         .catch((error) => {
-          setError(error);
+          setError(error.message); 
           setLoading({
             ...Loading,
             signUp: false,
@@ -154,8 +164,9 @@ const Auth = () => {
             )}
           </button>
           <small style={{ color: "red", paddingTop: "10px" }}>
-            {error ? error.message : ""}
+            {error ? error : ""} 
           </small>
+          <Link to="/forgot-password">Forgot your password?</Link> 
         </div>
       </section>
     </LayOut>
