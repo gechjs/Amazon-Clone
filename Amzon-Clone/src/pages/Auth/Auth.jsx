@@ -18,13 +18,23 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
+  const [passwordVisible, setPasswordVisible] = useState(false); // Added state for password visibility
   const navStateData = useLocation();
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
+  };
 
   const authHandler = (e) => {
     e.preventDefault();
     if (email.trim() === "" || password.trim() === "") {
       setError("Please enter your email and password.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     setIsLoading(true); 
@@ -113,12 +123,21 @@ const Auth = () => {
                 </div>
                 <div>
                   <label htmlFor="password">Password</label>
-                  <input
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    type="password"
-                    id="password"
-                  />
+                  <div className={styles.passwordContainer}>
+                    <input
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      type={passwordVisible ? "text" : "password"} // Toggle between password and text
+                      id="password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPasswordVisible(!passwordVisible)} // Toggle visibility
+                      className={styles.passwordToggle}
+                    >
+                      {passwordVisible ? "Hide" : "Show"}
+                    </button>
+                  </div>
                 </div>
                 <button
                   name="signIn"
