@@ -5,8 +5,8 @@ import { DataContext } from "../../components/DataProvider/DataProvider";
 import ProductCard from "../../components/Product/ProductCard";
 import { Link } from "react-router-dom";
 import { type } from "../../utils/action.type";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
 const Cart = () => {
   const [{ basket }, dispatch] = useContext(DataContext);
 
@@ -20,7 +20,13 @@ const Cart = () => {
   const decrement = (item) => {
     dispatch({
       type: type.REMOVE_FROM_BASKET,
-      id: item.id, 
+      id: item.id,
+    });
+  };
+
+  const clearCart = () => {
+    dispatch({
+      type: type.CLEAR_BASKET,
     });
   };
 
@@ -45,24 +51,34 @@ const Cart = () => {
                   renderDesc={true}
                 />
                 <div className={styles.btn_container}>
-                  <button className={styles.btn} onClick={() => increment(item)}><IoIosArrowUp size={20} /></button>
+                  <button
+                    className={styles.btn}
+                    onClick={() => increment(item)}
+                  >
+                    <IoIosArrowUp size={20} />
+                  </button>
                   <span>{item.amount}</span>
-                  <button  className={styles.btn} onClick={() => decrement(item)}><IoIosArrowDown size={20}/></button>
+                  <button
+                    className={styles.btn}
+                    onClick={() => decrement(item)}
+                  >
+                    <IoIosArrowDown size={20} />
+                  </button>
                 </div>
               </section>
             ))
+          )}
+          {basket.length > 0 && (
+            <button className={styles.clearCart} onClick={clearCart}>
+              Clear Cart
+            </button>
           )}
         </div>
         {basket.length > 0 && (
           <div className={styles.subtotal}>
             <div>
               <p>Subtotal ({basket.length}) items</p>
-              <p>
-                Total: $
-               {
-                total
-               }
-              </p>
+              <p>Total: ${total}</p>
             </div>
             <span>
               <input type="checkbox" />
