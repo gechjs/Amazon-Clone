@@ -44,7 +44,12 @@ const Cart = () => {
             <p>Your cart is empty. Start shopping!</p>
           ) : (
             basket.map((item) => (
-              <section key={item.id} className={styles.cart_product}>
+              <section
+                key={item.id}
+                className={`${styles.cart_product} ${
+                  item.stock < 5 ? styles.lowStock : ""
+                }`}
+              >
                 <ProductCard
                   product={item}
                   renderAdd={true}
@@ -66,6 +71,11 @@ const Cart = () => {
                     <IoIosArrowDown size={20} />
                   </button>
                 </div>
+                {item.stock < 5 && (
+                  <p className={styles.warning}>
+                    Only {item.stock} left in stock!
+                  </p>
+                )}
               </section>
             ))
           )}
