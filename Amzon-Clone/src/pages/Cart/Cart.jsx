@@ -40,7 +40,7 @@ const Cart = () => {
           <h3>Your shopping basket</h3>
           <hr />
           {basket?.length === 0 ? (
-            <p>Oops! No item in your cart</p>
+            <p>Your cart is empty. Start shopping!</p>
           ) : (
             basket.map((item) => (
               <section key={item.id} className={styles.cart_product}>
