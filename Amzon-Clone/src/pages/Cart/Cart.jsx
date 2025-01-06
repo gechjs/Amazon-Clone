@@ -30,7 +30,8 @@ const Cart = () => {
     });
   };
 
-  const total = basket.reduce((acc, curr) => acc + curr.price * curr.amount, 0);
+  // Format subtotal to two decimal places
+  const total = basket.reduce((acc, curr) => acc + curr.price * curr.amount, 0).toFixed(2);
 
   return (
     <LayOut>
