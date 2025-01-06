@@ -71,7 +71,7 @@ const Cart = () => {
           )}
           {basket.length > 0 && (
             <button className={styles.clearCart} onClick={clearCart}>
-              Clear Cart
+              Clear Cart ({basket.length})
             </button>
           )}
         </div>
