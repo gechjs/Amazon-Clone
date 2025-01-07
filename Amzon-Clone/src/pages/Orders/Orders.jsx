@@ -16,20 +16,28 @@ const Orders = () => {
   const [{ user }] = useContext(DataContext);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (user) {
       const ordersRef = collection(db, "users", user.uid, "orders");
       const q = query(ordersRef, orderBy("created", "desc"));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const ordersData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }));
-        setOrders(ordersData);
-        setLoading(false);
-      });
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const ordersData = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }));
+          setOrders(ordersData);
+          setLoading(false);
+        },
+        (err) => {
+          setError("Failed to fetch orders. Please try again later.");
+          setLoading(false);
+        }
+      );
 
       return () => unsubscribe();
     } else {
@@ -45,9 +53,9 @@ const Orders = () => {
           <h2>Your Orders</h2>
           <div>
             {loading ? (
-              <div className={styles.loading_message}>
-                Loading your orders...
-              </div>
+              <div className={styles.loading_message}>Loading your orders...</div>
+            ) : error ? (
+              <div className={styles.error_message}>{error}</div>
             ) : orders?.length === 0 ? (
               <div className={styles.no_orders_message}>
                 You don't have any orders yet. Start shopping to place your first order!
