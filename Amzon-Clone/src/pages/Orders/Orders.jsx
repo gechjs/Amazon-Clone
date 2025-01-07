@@ -6,7 +6,6 @@ import { DataContext } from "../../components/DataProvider/DataProvider";
 import ProductCard from "../../components/Product/ProductCard";
 import {
   collection,
-  doc,
   orderBy,
   query,
   onSnapshot,
@@ -66,7 +65,14 @@ const Orders = () => {
                   <hr />
                   <p>Order ID: {eachOrder.id}</p>
                   {eachOrder.data.basket.map((order, index) => (
-                    <ProductCard flex={true} product={order} key={index} />
+                    <div key={index} className={styles.product_wrapper}>
+                      <ProductCard flex={true} product={order} />
+                      {order.quantity && (
+                        <p className={styles.quantity}>
+                          Quantity: {order.quantity}
+                        </p>
+                      )}
+                    </div>
                   ))}
                 </div>
               ))
