@@ -11,9 +11,11 @@ import {
   query,
   onSnapshot,
 } from "firebase/firestore";
+
 const Orders = () => {
   const [{ user }] = useContext(DataContext);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -26,11 +28,13 @@ const Orders = () => {
           data: doc.data(),
         }));
         setOrders(ordersData);
+        setLoading(false);
       });
 
       return () => unsubscribe();
     } else {
       setOrders([]);
+      setLoading(false);
     }
   }, [user]);
 
@@ -40,10 +44,14 @@ const Orders = () => {
         <div className={styles.orders_container}>
           <h2>Your Orders</h2>
           <div>
-            {orders?.length === 0 ? (
-              <div style={{
-                padding: '20px',
-              }}>you don't have orders yet.</div>
+            {loading ? (
+              <div className={styles.loading_message}>
+                Loading your orders...
+              </div>
+            ) : orders?.length === 0 ? (
+              <div className={styles.no_orders_message}>
+                You don't have any orders yet. Start shopping to place your first order!
+              </div>
             ) : (
               orders.map((eachOrder) => (
                 <div key={eachOrder.id}>
