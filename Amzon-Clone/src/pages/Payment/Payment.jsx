@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import styles from "./payment.module.css";
 import LayOut from "../../components/LayOut/LayOut";
 import { DataContext } from "../../components/DataProvider/DataProvider";
@@ -7,7 +7,7 @@ import { ClipLoader } from "react-spinners";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { paymentAxiosInstance } from "../../utils/axios";
 import { db } from "../../utils/firebase";
-import { doc, setDoc } from "firebase/firestore"; // Import modular functions
+import { doc, setDoc } from "firebase/firestore"; 
 import { useNavigate } from "react-router-dom";
 import { type } from "../../utils/action.type";
 
@@ -15,11 +15,24 @@ const Payment = () => {
   const navigate = useNavigate();
   const [cardError, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const stripe = useStripe();
   const elements = useElements();
   const [{ basket, user }, dispatch] = useContext(DataContext);
+
   const totalItem = basket.reduce((amount, item) => item.amount + amount, 0);
   const total = basket.reduce((acc, curr) => acc + curr.price * curr.amount, 0);
+
+  // Ensure user has items in the basket and user data is available
+  useEffect(() => {
+    if (basket.length === 0) {
+      setError("Your cart is empty.");
+    } else if (!user?.email) {
+      setError("Please log in to continue with the payment.");
+    } else {
+      setLoading(false);
+    }
+  }, [basket, user]);
 
   const handleChange = (e) => {
     setError(e.error ? e.error.message : "");
@@ -76,7 +89,9 @@ const Payment = () => {
 
   return (
     <LayOut>
-      <div className={styles.payment_header}>Checkout ({totalItem}) items</div>
+      <div className={styles.payment_header}>
+        Checkout ({totalItem}) items
+      </div>
       <section className={styles.payment}>
         <div className={styles.flex}>
           <h3>Delivery Address</h3>
@@ -104,24 +119,33 @@ const Payment = () => {
                 {cardError && (
                   <small style={{ color: "red" }}>{cardError}</small>
                 )}
-                <CardElement onChange={handleChange} />
-                <div className={styles.payment_price}>
-                  <div>
-                    <span style={{ display: "flex", gap: "10px" }}>
-                      <p>Total Order |</p> {total}
-                    </span>
+                {loading ? (
+                  <div className={styles.loading}>
+                    <ClipLoader color="gray" size={12} />
+                    <p>Loading payment form...</p>
                   </div>
-                  <button type="submit" disabled={processing}>
-                    {processing ? (
-                      <div className={styles.loading}>
-                        <ClipLoader color="gray" size={12} />
-                        <p>Please Wait...</p>
+                ) : (
+                  <>
+                    <CardElement onChange={handleChange} />
+                    <div className={styles.payment_price}>
+                      <div>
+                        <span style={{ display: "flex", gap: "10px" }}>
+                          <p>Total Order |</p> {total}
+                        </span>
                       </div>
-                    ) : (
-                      "Pay Now"
-                    )}
-                  </button>
-                </div>
+                      <button type="submit" disabled={processing}>
+                        {processing ? (
+                          <div className={styles.loading}>
+                            <ClipLoader color="gray" size={12} />
+                            <p>Please Wait...</p>
+                          </div>
+                        ) : (
+                          "Pay Now"
+                        )}
+                      </button>
+                    </div>
+                  </>
+                )}
               </form>
             </div>
           </div>
