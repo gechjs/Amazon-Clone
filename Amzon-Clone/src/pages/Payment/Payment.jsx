@@ -16,6 +16,7 @@ const Payment = () => {
   const [cardError, setError] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [cardValid, setCardValid] = useState(false); // Track card validity
   const stripe = useStripe();
   const elements = useElements();
   const [{ basket, user }, dispatch] = useContext(DataContext);
@@ -36,6 +37,7 @@ const Payment = () => {
 
   const handleChange = (e) => {
     setError(e.error ? e.error.message : "");
+    setCardValid(e.complete); // Update validity based on card input
   };
 
   const handlePayment = async (e) => {
@@ -133,7 +135,7 @@ const Payment = () => {
                           <p>Total Order |</p> {total}
                         </span>
                       </div>
-                      <button type="submit" disabled={processing}>
+                      <button type="submit" disabled={processing || !cardValid}>
                         {processing ? (
                           <div className={styles.loading}>
                             <ClipLoader color="gray" size={12} />
