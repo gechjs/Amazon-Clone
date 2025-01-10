@@ -8,24 +8,25 @@ import Loader from "../../components/loader/Loader.jsx";
 import ErrorBoundary from "../../components/ErrorBoundary/ErrorBoundary";
 
 const ProductDetail = () => {
-  const [data, setData] = useState(null); 
+  const [data, setData] = useState(null);
   const { productId } = useParams();
-  const [isLoading, setLoading] = useState(true); 
+  const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await instance(`products/${productId}`);
-        setData(response.data); 
+        setData(response.data);
       } catch (err) {
         setError(err);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
+
     fetchData();
-  }, [productId]);
+  }, [productId]); 
 
   return (
     <LayOut>
@@ -34,10 +35,10 @@ const ProductDetail = () => {
           <Loader />
         ) : error ? (
           <div>An error occurred: {error.message}</div>
-        ) : data ? ( 
+        ) : data ? (
           <ProductCard renderDesc={true} flex={true} product={data} />
         ) : (
-          <div>Product not found.</div> 
+          <div>Product not found.</div>
         )}
       </ErrorBoundary>
     </LayOut>
