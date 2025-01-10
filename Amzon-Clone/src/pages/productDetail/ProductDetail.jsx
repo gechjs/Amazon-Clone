@@ -7,7 +7,7 @@ import ProductCard from "../../components/Product/ProductCard.jsx";
 import Loader from "../../components/loader/Loader.jsx";
 
 const ProductDetail = () => {
-  const [data, setdata] = useState([]);
+  const [data, setData] = useState([]); // Use setData instead of setdata for better naming convention
   const { productId } = useParams();
   const [isLoading, setLoading] = useState(false);
 
@@ -17,7 +17,7 @@ const ProductDetail = () => {
       try {
         const response = await instance(`products/${productId}`);
         setLoading(false);
-        setdata(response.data);
+        setData(response.data);
       } catch (error) {
         console.error(error);
         setLoading(false);
@@ -38,3 +38,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
