@@ -10,6 +10,7 @@ const Results = () => {
   const { categoryName } = useParams();
   const [results, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -34,15 +35,15 @@ const Results = () => {
         <p style={{ padding: "30px" }}>Category: {categoryName}</p>
         <hr />
         <div className={styles.product_container}>
-          {
-            isLoading? (
-              <Loader />
-            ) : (
-              results.map((item) => (
-                <ProductCard product={item} key={item.id} />
-              ))
-            )
-          }
+          {isLoading ? (
+            <Loader />
+          ) : results.length === 0 ? (
+            <p>No products found in this category.</p>
+          ) : (
+            results.map((item) => (
+              <ProductCard product={item} key={item.id} />
+            ))
+          )}
         </div>
       </div>
     </LayOut>
