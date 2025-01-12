@@ -10,14 +10,21 @@ const Results = () => {
   const { categoryName } = useParams();
   const [results, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // New state for error handling
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [itemsPerPage, setItemsPerPage] = useState(10); 
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setError(null); // Reset error on new request
+      setError(null); 
       try {
-        const response = await instance.get(`products/category/${categoryName}`);
+        const response = await instance.get(`products/category/${categoryName}`, {
+          params: {
+            _page: currentPage,
+            _limit: itemsPerPage,
+          },
+        });
         setLoading(false);
         setData(response.data);
       } catch (err) {
@@ -27,7 +34,14 @@ const Results = () => {
       }
     };
     fetchData();
-  }, [categoryName]);
+  }, [categoryName, currentPage, itemsPerPage]);
+
+
+  const handlePageChange = (page) => {
+    if (page > 0) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <LayOut>
@@ -39,7 +53,7 @@ const Results = () => {
           {isLoading ? (
             <Loader />
           ) : error ? (
-            <p style={{ color: "red" }}>{error}</p> // Display error message if it occurs
+            <p style={{ color: "red" }}>{error}</p>
           ) : results.length === 0 ? (
             <p aria-live="polite" style={{ padding: "30px", color: "gray" }}>
               No products found in the "{categoryName}" category. Try exploring other categories or check back later.
@@ -49,6 +63,25 @@ const Results = () => {
               <ProductCard product={item} key={item.id} />
             ))
           )}
+        </div>
+
+       
+        <div className={styles.pagination}>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className={styles.pageButton}
+          >
+            Previous
+          </button>
+          <span className={styles.pageNumber}>Page {currentPage}</span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={results.length < itemsPerPage}
+            className={styles.pageButton}
+          >
+            Next
+          </button>
         </div>
       </div>
     </LayOut>
