@@ -10,19 +10,20 @@ const Results = () => {
   const { categoryName } = useParams();
   const [results, setData] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // New state for error handling
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      setError(null); // Reset error on new request
       try {
-        const response = await instance.get(
-          `products/category/${categoryName}`
-        );
+        const response = await instance.get(`products/category/${categoryName}`);
         setLoading(false);
         setData(response.data);
       } catch (err) {
-        console.log("error", err);
+        console.log("Error fetching products:", err);
         setLoading(false);
+        setError("Failed to load products. Please try again later.");
       }
     };
     fetchData();
@@ -37,6 +38,8 @@ const Results = () => {
         <div className={styles.product_container}>
           {isLoading ? (
             <Loader />
+          ) : error ? (
+            <p style={{ color: "red" }}>{error}</p> // Display error message if it occurs
           ) : results.length === 0 ? (
             <p>No products found in this category.</p>
           ) : (
