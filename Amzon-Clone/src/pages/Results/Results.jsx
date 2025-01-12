@@ -41,7 +41,9 @@ const Results = () => {
           ) : error ? (
             <p style={{ color: "red" }}>{error}</p> // Display error message if it occurs
           ) : results.length === 0 ? (
-            <p>No products found in this category.</p>
+            <p aria-live="polite" style={{ padding: "30px", color: "gray" }}>
+              No products found in the "{categoryName}" category. Try exploring other categories or check back later.
+            </p>
           ) : (
             results.map((item) => (
               <ProductCard product={item} key={item.id} />
