@@ -2,23 +2,24 @@ import React from "react";
 import images from "./data";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import style from './css/carousel.module.css'
+import style from './css/carousel.module.css';
+
 const CarouselEffect = () => {
   return (
     <div>
       <Carousel
         infiniteLoop={true}
-        showIndicators = {false}
+        showIndicators={false}
         autoPlay={true}
-        showThumbs = {false}
+        showThumbs={false}
       >
-        <img src={images[0]} alt="" />
-        <img src={images[1]} alt="" />
-        <img src={images[2]} alt="" />
-        <img src={images[3]} alt="" />
-        <img src={images[4]} alt="" />
+        {images.map((image, index) => (
+          <img key={index} src={image} alt={`Carousel image ${index + 1}`} />
+        ))}
       </Carousel>
-      <div className={style.heroImg}></div>
+      <div className={style.heroImg}>
+      
+      </div>
     </div>
   );
 };
