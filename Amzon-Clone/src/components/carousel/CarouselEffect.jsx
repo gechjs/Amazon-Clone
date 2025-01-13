@@ -5,9 +5,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import style from './css/carousel.module.css';
 
 const CarouselEffect = () => {
-  // Check if images are available, if not use a placeholder image
-  const imageList = images.length > 0 ? images : ['https://via.placeholder.com/600x400'];
-
   return (
     <div>
       <Carousel
@@ -16,13 +13,17 @@ const CarouselEffect = () => {
         autoPlay={true}
         showThumbs={false}
       >
-        {imageList.map((image, index) => (
-          <img key={index} src={image} alt={`Carousel image ${index + 1}`} />
+        {images.map((image, index) => (
+          <img 
+            key={`carousel-image-${index}`} 
+            src={image} 
+            alt={`Slide ${index + 1} showcasing content`} 
+          />
         ))}
       </Carousel>
-      <div className={style.heroImg}>
-        
-        <div className={style.overlay}></div>
+      <div className={style.heroImg} style={{ backgroundImage: `url(${images[0]})` }}>
+       
+        <h1>Welcome to the Carousel</h1>
       </div>
     </div>
   );
