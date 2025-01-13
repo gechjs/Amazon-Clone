@@ -21,7 +21,7 @@ const CarouselEffect = () => {
         ))}
       </Carousel>
       <div className={style.heroImg}>
-        {/* Added background color or placeholder content */}
+        
         <div className={style.overlay}></div>
       </div>
     </div>
