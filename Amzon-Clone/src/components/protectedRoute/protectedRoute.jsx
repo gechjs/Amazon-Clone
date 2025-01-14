@@ -1,18 +1,25 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataContext } from "../../components/DataProvider/DataProvider"; 
 
 const ProtectedRoute = ({ children, msg, redirect }) => {
   const navigate = useNavigate();
-  const [{ user }] = useContext(DataContext); 
+  const [{ user, loading }] = useContext(DataContext); 
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth', { state: { msg, redirect } });
+    if (!loading) {
+      setIsLoading(false);
+      if (!user) {
+        navigate('/auth', { state: { msg, redirect } });
+      }
     }
-  }, []);
+  }, [loading, user, navigate, msg, redirect]);
 
-  
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
   if (!user) {
     return null; 
   }
