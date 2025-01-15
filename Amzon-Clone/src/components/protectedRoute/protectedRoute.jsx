@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DataContext } from "../../components/DataProvider/DataProvider"; 
+import { DataContext } from "../../components/DataProvider/DataProvider";
 
 const ProtectedRoute = ({ children, msg, redirect }) => {
   const navigate = useNavigate();
-  const [{ user, loading }] = useContext(DataContext); 
+  const [{ user, loading }] = useContext(DataContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,15 +16,11 @@ const ProtectedRoute = ({ children, msg, redirect }) => {
     }
   }, [loading, user, navigate, msg, redirect]);
 
-  if (isLoading) {
-    return <div>Loading...</div>
+  if (loading || isLoading) {
+    return <div>Loading...</div>;
   }
 
-  if (!user) {
-    return null; 
-  }
-
-  return children; 
+  return user ? children : null;
 };
 
 export default ProtectedRoute;
