@@ -8,7 +8,7 @@ import Loader from "../loader/Loader";
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null); // Added state for error handling
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,7 +17,7 @@ const Product = () => {
         const response = await instance.get("/products");
         setProducts(response.data);
       } catch (err) {
-        setError("Failed to fetch products."); // Set a user-friendly error message
+        setError("Failed to fetch products. Please try again later."); 
         console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
@@ -32,12 +32,17 @@ const Product = () => {
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <p>{error}</p> // Display error message to the user
+        <p className={styles.errorMessage}>{error}</p>
       ) : (
-        products.map((item) => <ProductCard product={item} key={item.id} />)
+        products.length === 0 ? (
+          <p>No products found.</p>
+        ) : (
+          products.map((item) => <ProductCard product={item} key={item.id} />)
+        )
       )}
     </section>
   );
 };
 
 export default Product;
+
