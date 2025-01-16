@@ -6,7 +6,7 @@ import styles from "./ProductCard.module.css";
 import Loader from "../loader/Loader";
 
 const Product = () => {
-  const [products, setProducts] = useState();
+  const [products, setProducts] = useState([]); // Changed from empty object to empty array for better data handling
   const [isLoading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
@@ -26,7 +26,7 @@ const Product = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        products?.map((item) => <ProductCard product={item} key={item.id} />)
+        products.map((item) => <ProductCard product={item} key={item.id} />)
       )}
     </section>
   );
