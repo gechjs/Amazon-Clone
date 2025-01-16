@@ -6,31 +6,38 @@ import styles from "./ProductCard.module.css";
 import Loader from "../loader/Loader";
 
 const Product = () => {
-  const [products, setProducts] = useState([]); // Changed from empty object to empty array for better data handling
+  const [products, setProducts] = useState([]);
   const [isLoading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // Added state for error handling
+
   useEffect(() => {
-    setLoading(true);
-    instance
-      .get("/products")
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await instance.get("/products");
+        setProducts(response.data);
+      } catch (err) {
+        setError("Failed to fetch products."); // Set a user-friendly error message
+        console.error("Error fetching products:", err);
+      } finally {
         setLoading(false);
-        setProducts(res.data);
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
+
   return (
     <section className={styles.products_container}>
       {isLoading ? (
         <Loader />
+      ) : error ? (
+        <p>{error}</p> // Display error message to the user
       ) : (
         products.map((item) => <ProductCard product={item} key={item.id} />)
       )}
     </section>
   );
 };
-
 
 export default Product;
